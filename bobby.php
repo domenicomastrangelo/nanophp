@@ -29,6 +29,7 @@ function make(string $element, string $name)
     switch($element) {
         case 'controller':
             makeController($name);
+        break;
         case 'view':
             makeView($name);
     }
