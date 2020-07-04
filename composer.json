@@ -1,5 +1,6 @@
 {
   "name": "nanophp/nanophp",
+  "license": "MIT",
   "autoload": {
     "psr-4": {"":"src/"}
   }
