@@ -1,4 +1,5 @@
 {
+  "name": "nanophp/nanophp",
   "autoload": {
     "psr-4": {"":"src/"}
   }
