@@ -30,6 +30,9 @@ function make(string $element, string $name)
         case 'controller':
             makeController($name);
         break;
+        case 'model':
+            makeModel($name);
+        break;
         case 'view':
             makeView($name);
     }
@@ -42,6 +45,16 @@ function makeController(string $name)
     $fileCreated = createFile($filepath, $text);
     if($fileCreated) {
         echo "Controller $name was created successfully!\n";
+    }
+}
+
+function makeModel(string $name)
+{
+    $text = "<?php\n\nnamespace NanoPHP\Models;\n\nclass $name extends BaseModel {\n\tprotected \$tableName = \"$name\";\n}";
+    $filepath = __DIR__ . "/src/NanoPHP/Views/$name.php";
+    $fileCreated = createFile($filepath, $text);
+    if($fileCreated) {
+        echo "View $name was created successfully!\n";
     }
 }
 
