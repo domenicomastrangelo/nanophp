@@ -9,12 +9,12 @@ class BaseController {
     
     public function __construct()
     {
-        $this->view = (new \ReflectionClass($this))->getShortName() . ".php";
+        $this->view = (new \ReflectionClass($this))->getShortName();
     }
 
     public function getView()
     {
-        $viewFilePath = realpath(\NanoPHP\Config::VIEWS_PATH) . '/' . $this->view;
+        $viewFilePath = realpath(\NanoPHP\Config::VIEWS_PATH) . '/' . $this->view . ".php";
         $_SESSION['viewData'] = $this->viewData;
 
         ob_start();
