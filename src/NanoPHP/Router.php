@@ -16,7 +16,11 @@ class Router {
             $this->checkRouteExists();
             $this->route($routes[$URI]);
         } catch(\Exception $e) {
-            echo $e;
+            if(Config::DEBUG_MODE) {
+                echo $e;
+            } else {
+                echo "404 - Page not found";
+            }
         }
     }
 
@@ -47,7 +51,11 @@ class Router {
 
             echo $controllerObject->$function();
         } catch(\Exception $e) {
-            echo $e;
+            if(Config::DEBUG_MODE) {
+                echo $e;
+            } else {
+                echo "500 - Internal Server Error";
+            }
         }
     }
 }

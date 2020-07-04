@@ -29,7 +29,11 @@ class BaseModel {
 
             return $this;
         } catch(\Exception $e) {
-            echo $e;
+            if(Config::DEBUG_MODE) {
+                echo $e;
+            } else {
+                echo "500 - Internal Server Error";
+            }
         }
 
         return null;
@@ -55,7 +59,11 @@ class BaseModel {
 
             return "where $columnName = :$randomValueName";
         } catch(\Exception $e) {
-            echo $e;
+            if(Config::DEBUG_MODE) {
+                echo $e;
+            } else {
+                echo "500 - Internal Server Error";
+            }
         }
 
         return '';

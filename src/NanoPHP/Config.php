@@ -11,6 +11,8 @@ class Config {
     const DB_PASS = 'password';
     const DB_HOST = 'mariadb';
 
+    const DEBUG_MODE = true;
+
     public static function getDBOptions(): array
     {
         return [
