@@ -2,12 +2,13 @@ version: "3.7"
 services: 
   web:
     build: .
-    ports: 
-      - 80:80
     volumes: 
       - .:/var/www/html
+      - ./httpd/sites-enabled:/etc/apache2/sites-enabled
     working_dir: "/var/www/html"
-    command: "php serve.php"
+    ports: 
+      - 80:80
+      - 443:443
     networks: 
       - nanophp
   mariadb:
@@ -24,7 +25,7 @@ services:
   adminer:
     image: "adminer"
     ports:
-      - 8080:8080
+      - 8888:8080
     links: 
       - mariadb
     networks:

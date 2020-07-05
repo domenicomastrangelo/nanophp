@@ -1,4 +1,5 @@
 <?php
+
     extract($_SESSION['viewData']);
     unset($_SESSION['viewData']);
 ?>

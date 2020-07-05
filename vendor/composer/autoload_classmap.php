@@ -6,7 +6,13 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'NanoPHP\\Controllers\\Home' => $baseDir . '/src/NanoPHP/Controllers/Home.php',
-    'NanoPHP\\Router' => $baseDir . '/src/NanoPHP/Router.php',
-    'NanoPHP\\Routes' => $baseDir . '/src/NanoPHP/Routes.php',
+    'NanoPHP\\Config' => $baseDir . '/src/Config.php',
+    'NanoPHP\\Controllers\\BaseController' => $baseDir . '/src/Controllers/BaseController.php',
+    'NanoPHP\\Controllers\\Home' => $baseDir . '/src/Controllers/Home.php',
+    'NanoPHP\\Library\\Database\\DatabaseInterface' => $baseDir . '/src/Library/Database/DatabaseInterface.php',
+    'NanoPHP\\Library\\Database\\Mysql' => $baseDir . '/src/Library/Database/Mysql.php',
+    'NanoPHP\\Models\\BaseModel' => $baseDir . '/src/Models/BaseModel.php',
+    'NanoPHP\\Models\\User' => $baseDir . '/src/Models/User.php',
+    'NanoPHP\\Router' => $baseDir . '/src/Router.php',
+    'NanoPHP\\Routes' => $baseDir . '/src/Routes.php',
 );

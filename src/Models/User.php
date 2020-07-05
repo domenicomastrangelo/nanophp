@@ -2,7 +2,7 @@
 
 namespace NanoPHP\Models;
 
-class User extends BaseModel {
-
+class User extends BaseModel
+{
     protected $tableName = "users";
 }

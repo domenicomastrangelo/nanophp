@@ -2,6 +2,6 @@
   "name": "nanophp/nanophp",
   "license": "MIT",
   "autoload": {
-    "psr-4": {"":"src/"}
+    "psr-4": {"NanoPHP\\":"src/"}
   }
 }

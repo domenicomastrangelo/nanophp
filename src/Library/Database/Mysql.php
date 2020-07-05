@@ -2,11 +2,13 @@
 
 namespace NanoPHP\Library\Database;
 
-class Mysql implements DatabaseInterface {
-
+class Mysql implements DatabaseInterface
+{
     public static $dbInstance = null;
     
-    private function __construct() {}
+    private function __construct()
+    {
+    }
 
     public static function getInstance(array $options): \PDO
     {
@@ -16,8 +18,8 @@ class Mysql implements DatabaseInterface {
             $user     = $options["DB_USER"];
             $pass     = $options["DB_PASS"];
             
-            if(static::$dbInstance == null) {
-                static::$dbInstance = new \PDO ("mysql:host=$hostname;dbname=$dbname", $user, $pass, [\PDO::ATTR_PERSISTENT => true]);
+            if (static::$dbInstance == null) {
+                static::$dbInstance = new \PDO("mysql:host=$hostname;dbname=$dbname", $user, $pass, [\PDO::ATTR_PERSISTENT => true]);
             }
 
             return static::$dbInstance;

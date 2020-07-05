@@ -2,8 +2,8 @@
 
 namespace NanoPHP\Controllers;
 
-class BaseController {
-
+class BaseController
+{
     protected $view     = '';
     protected $viewData = [];
     

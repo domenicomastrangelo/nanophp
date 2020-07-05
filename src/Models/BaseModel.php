@@ -4,8 +4,8 @@ namespace NanoPHP\Models;
 
 use NanoPHP\Config;
 
-class BaseModel {
-
+class BaseModel
+{
     protected $dbInstance     = null;
     protected $tableName      = '';
     protected $query          = '';
@@ -21,15 +21,15 @@ class BaseModel {
         $columns = explode(", ", $columns);
 
         try {
-            foreach($columns as $column) {
+            foreach ($columns as $column) {
                 $this->checkColumnExists($column);
             }
             $columns = implode(", ", $columns);
             $this->query = "select $columns from $this->tableName ";
 
             return $this;
-        } catch(\Exception $e) {
-            if(Config::DEBUG_MODE) {
+        } catch (\Exception $e) {
+            if (Config::DEBUG_MODE) {
                 echo $e;
             } else {
                 echo "500 - Internal Server Error";
@@ -41,10 +41,10 @@ class BaseModel {
 
     public function where(string $columnName, string $operator, string $value): self
     {
-        switch($operator) {
+        switch ($operator) {
             case '=':
                 $this->query .= $this->whereEquals($columnName, $value);
-            break;
+                break;
         }
         return $this;
     }
@@ -58,8 +58,8 @@ class BaseModel {
             $this->preparedValues[] = [$randomValueName, $value];
 
             return "where $columnName = :$randomValueName";
-        } catch(\Exception $e) {
-            if(Config::DEBUG_MODE) {
+        } catch (\Exception $e) {
+            if (Config::DEBUG_MODE) {
                 echo $e;
             } else {
                 echo "500 - Internal Server Error";
@@ -72,7 +72,7 @@ class BaseModel {
     public function get(): array
     {
         $stmt = $this->dbInstance->prepare($this->query);
-        foreach($this->preparedValues as $key => $val) {
+        foreach ($this->preparedValues as $key => $val) {
             $stmt->bindValue($key, $val);
         }
         $stmt->execute();
@@ -82,7 +82,7 @@ class BaseModel {
     public function getFirst()
     {
         $stmt = $this->dbInstance->prepare($this->query);
-        foreach($this->preparedValues as $key => $val) {
+        foreach ($this->preparedValues as $key => $val) {
             $stmt->bindValue($key, $val);
         }
         $stmt->execute();
@@ -91,19 +91,21 @@ class BaseModel {
 
     private function checkTableExists(string $tableName)
     {
-        $tableExists = in_array($tableName, array_values($this->getAllDBTables()));
-        print_r(array_values($this->getAllDBTables()));
-        if(!$tableExists) {
+        $tableExists = in_array($tableName, $this->getAllDBTables());
+        if (!$tableExists) {
             throw new \Exception("Table '$tableName' does not exist in '" . \NanoPHP\Config::DB_NAME . "'");
         }
+        return true;
     }
 
     private function checkColumnExists(string $columnName)
     {
         $tableExists  = $this->checkTableExists($this->tableName);
         $columnExists = in_array($columnName, $this->getAllTableColumns($this->tableName));
-        if(!$tableExists || !$columnExists) {
-            throw new \Exception("Column '$columnName' does not exist in '" . \NanoPHP\Config::DB_NAME . "'");
+        if (!$tableExists) {
+            throw new \Exception("Table '$this->tableName' does not exist in database '" . \NanoPHP\Config::DB_NAME . "'");
+        } elseif (!$columnExists) {
+            throw new \Exception("Column '$columnName' does not exist in table '$this->tableName'");
         }
     }
 
@@ -119,6 +121,15 @@ class BaseModel {
     {
         $sql = "show tables";
         $result = $this->dbInstance->query($sql);
-        return $result->fetchAll(\PDO::FETCH_COLUMN);
+        $tmp = $result->fetchAll(\PDO::FETCH_ASSOC);
+        $tables = [];
+
+        foreach ($tmp as $key => $val) {
+            foreach ($val as $k => $v) {
+                $tables[] = $v;
+            }
+        }
+
+        return $tables;
     }
 }

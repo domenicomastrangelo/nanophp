@@ -2,8 +2,8 @@
 
 namespace NanoPHP;
 
-class Router {
-
+class Router
+{
     private $URI;
     private $routes = [];
 
@@ -15,8 +15,8 @@ class Router {
         try {
             $this->checkRouteExists();
             $this->route($routes[$URI]);
-        } catch(\Exception $e) {
-            if(Config::DEBUG_MODE) {
+        } catch (\Exception $e) {
+            if (Config::DEBUG_MODE) {
                 echo $e;
             } else {
                 echo "404 - Page not found";
@@ -26,7 +26,7 @@ class Router {
 
     private function checkRouteExists()
     {
-        if(!in_array($this->URI, array_keys($this->routes))) {
+        if (!in_array($this->URI, array_keys($this->routes))) {
             throw new \Exception("Route $this->URI does not exist");
         }
     }
@@ -39,19 +39,19 @@ class Router {
             list($controller, $function) = explode("@", $controllerAndFunction);
             $controller = "NanoPHP\\Controllers\\" . $controller;
             
-            if(!class_exists($controller)) {
+            if (!class_exists($controller)) {
                 throw new \Exception("Class $controller not found");
             }
             
-            $controllerObject = new $controller;
+            $controllerObject = new $controller();
 
-            if(!method_exists($controllerObject, $function)) {
+            if (!method_exists($controllerObject, $function)) {
                 throw new \Exception("Method $function not found");
             }
 
             echo $controllerObject->$function();
-        } catch(\Exception $e) {
-            if(Config::DEBUG_MODE) {
+        } catch (\Exception $e) {
+            if (Config::DEBUG_MODE) {
                 echo $e;
             } else {
                 echo "500 - Internal Server Error";

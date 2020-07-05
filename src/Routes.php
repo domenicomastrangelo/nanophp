@@ -2,13 +2,12 @@
 
 namespace NanoPHP;
 
-class Routes {
-
+class Routes
+{
     public static function getRoutes(): array
     {
         return [
-            '/'         => 'Home@Homepage',
-            '/register' => 'Auth@Register',
+            '/' => 'Home@homepage',
         ];
     }
 }
