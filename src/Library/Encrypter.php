@@ -88,13 +88,13 @@ class Encrypter
         return hash($algo, $data, false);
     }
 
-    public static function crypt(string $data, string $method, string $key): string
+    public static function crypt(string $data, string $method, string $key, string $iv): string
     {
-        return openssl_encrypt($data, $method, $key);
+        return openssl_encrypt($data, $method, $key, 0, $iv);
     }
 
-    public static function decrypt(string $data, string $method, string $key): string
+    public static function decrypt(string $data, string $method, string $key, string $iv): string
     {
-        return openssl_decrypt($data, $method, $key);
+        return openssl_decrypt($data, $method, $key, 1, $iv);
     }
 }
