@@ -46,7 +46,7 @@ class Router
         try {
             $this->checkRouteExists();
         } catch (\Exception $e) {
-            if ($this->di->make('client')->DEBUG_MODE) {
+            if ($this->di->make("config")::DEBUG_MODE) {
                 echo $e;
             } else {
                 echo "404 - Page not found";
@@ -75,7 +75,7 @@ class Router
 
             echo $controllerObject->$functionName(...$parametersToPassToMethod);
         } catch (\Exception $e) {
-            if ($this->di->make('client')->DEBUG_MODE) {
+            if ($this->di->make("config")::DEBUG_MODE) {
                 echo $e;
             } else {
                 echo "500 - Internal Server Error";
