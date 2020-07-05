@@ -6,9 +6,10 @@ class DependencyInjector
 {
     protected $pairsKeyClass = [];
 
-    public function register(string $key, string $class)
+    public function register(string $key, string $class): self
     {
         $this->pairsKeyClass[$key] = $class;
+        return $this;
     }
 
     public function make(string $key)
