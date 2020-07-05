@@ -3,5 +3,10 @@
   "license": "MIT",
   "autoload": {
     "psr-4": {"NanoPHP\\":"src/"}
+  },
+  "config": {
+    "platform": {
+      "php": "7.4"
+    }
   }
 }
