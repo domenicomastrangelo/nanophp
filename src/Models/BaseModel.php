@@ -2,18 +2,18 @@
 
 namespace NanoPHP\Models;
 
-use NanoPHP\Config;
-
 class BaseModel
 {
     protected $dbInstance     = null;
     protected $tableName      = '';
     protected $query          = '';
     protected $preparedValues = [];
+    protected $config         = [];
 
-    public function __construct()
+    public function __construct(array $config = [])
     {
-        $this->dbInstance = \NanoPHP\Library\Database\Mysql::getInstance(Config::getDBOptions());
+        $this->config = $config;
+        $this->dbInstance = \NanoPHP\Library\Database\Mysql::getInstance($this->config['DB_OPTIONS']);
     }
 
     public function select(string $columns): ?self
@@ -29,7 +29,7 @@ class BaseModel
 
             return $this;
         } catch (\Exception $e) {
-            if (Config::DEBUG_MODE) {
+            if ($this->config['DEBUG_MODE']) {
                 echo $e;
             } else {
                 echo "500 - Internal Server Error";
@@ -59,7 +59,7 @@ class BaseModel
 
             return "where $columnName = :$randomValueName";
         } catch (\Exception $e) {
-            if (Config::DEBUG_MODE) {
+            if ($this->config['DEBUG_MODE']) {
                 echo $e;
             } else {
                 echo "500 - Internal Server Error";
@@ -93,7 +93,7 @@ class BaseModel
     {
         $tableExists = in_array($tableName, $this->getAllDBTables());
         if (!$tableExists) {
-            throw new \Exception("Table '$tableName' does not exist in '" . \NanoPHP\Config::DB_NAME . "'");
+            throw new \Exception("Table '$tableName' does not exist in '" . $this->config['DB_NAME'] . "'");
         }
         return true;
     }
@@ -103,7 +103,7 @@ class BaseModel
         $tableExists  = $this->checkTableExists($this->tableName);
         $columnExists = in_array($columnName, $this->getAllTableColumns($this->tableName));
         if (!$tableExists) {
-            throw new \Exception("Table '$this->tableName' does not exist in database '" . \NanoPHP\Config::DB_NAME . "'");
+            throw new \Exception("Table '$this->tableName' does not exist in database '" . $this->config['DB_NAME'] . "'");
         } elseif (!$columnExists) {
             throw new \Exception("Column '$columnName' does not exist in table '$this->tableName'");
         }

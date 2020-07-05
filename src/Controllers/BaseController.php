@@ -6,15 +6,17 @@ class BaseController
 {
     protected $view     = '';
     protected $viewData = [];
+    protected $config   = [];
     
-    public function __construct()
+    public function __construct(array $config = [])
     {
-        $this->view = (new \ReflectionClass($this))->getShortName();
+        $this->view   = (new \ReflectionClass($this))->getShortName();
+        $this->config = $config;
     }
 
     public function getView()
     {
-        $viewFilePath = realpath(\NanoPHP\Config::VIEWS_PATH) . '/' . $this->view . ".php";
+        $viewFilePath = realpath($this->config['VIEWS_PATH']) . '/' . $this->view . ".php";
         $_SESSION['viewData'] = $this->viewData;
 
         ob_start();
