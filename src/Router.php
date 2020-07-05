@@ -32,11 +32,13 @@ class Router
         return $this;
     }
 
-    private function checkRouteExists()
+    private function checkRouteExists(): bool
     {
         if (!in_array($this->URI, array_keys($this->routes))) {
             throw new \Exception("Route $this->URI does not exist");
         }
+
+        return true;
     }
 
     public function route()
