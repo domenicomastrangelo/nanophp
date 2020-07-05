@@ -7,16 +7,18 @@ class BaseController
     protected $view     = '';
     protected $viewData = [];
     protected $config   = [];
+    protected $di = null;
     
-    public function __construct(array $config = [])
+    public function __construct(\NanoPHP\DependencyInjector $di)
     {
-        $this->view   = (new \ReflectionClass($this))->getShortName();
-        $this->config = $config;
+        $this->di   = $di;
+        $this->view = (new \ReflectionClass($this))->getShortName();
     }
 
     public function getView()
     {
-        $viewFilePath = realpath($this->config['VIEWS_PATH']) . '/' . $this->view . ".php";
+        $config = $this->di->make('config');
+        $viewFilePath = realpath($config::VIEWS_PATH) . '/' . $this->view . ".php";
         $_SESSION['viewData'] = $this->viewData;
 
         ob_start();
