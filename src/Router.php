@@ -2,6 +2,8 @@
 
 namespace NanoPHP;
 
+use NanoPHP\Controllers\BaseController;
+use NanoPHP\Library\Http\Response;
 use ReflectionClass;
 
 class Router
@@ -49,7 +51,7 @@ class Router
             if ($this->di->make("config")::DEBUG_MODE) {
                 echo $e;
             } else {
-                echo "404 - Page not found";
+                Response::abort(404);
             }
         }
 
@@ -73,17 +75,30 @@ class Router
 
             $parametersToPassToMethod = $this->getMethodParamsInstantiated($controllerObject, $functionName);
 
-            echo $controllerObject->$functionName(...$parametersToPassToMethod);
+            $response = $controllerObject->$functionName(...$parametersToPassToMethod);
+
+            if (!($response instanceof \NanoPHP\Library\Http\Response)) {
+                echo "Value returned from the controller is not a valid Response";
+                die();
+            }
+
+            foreach ($response->getHeaders() as $key => $value) {
+                header("$key: $value[0]");
+            }
+
+            http_response_code($response->getStatusCode());
+
+            echo $response->getBody();
         } catch (\Exception $e) {
             if ($this->di->make("config")::DEBUG_MODE) {
                 echo $e;
             } else {
-                echo "500 - Internal Server Error";
+                Response::abort(500);
             }
         }
     }
 
-    private function getMethodParamsInstantiated(\NanoPHP\Controllers\BaseController $controllerObject, string $function): array
+    private function getMethodParamsInstantiated(BaseController $controllerObject, string $function): array
     {
         $reflectorClass           = new ReflectionClass($controllerObject);
         $reflectorMethod          = $reflectorClass->getMethod($function);
