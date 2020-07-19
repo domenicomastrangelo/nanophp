@@ -55,10 +55,8 @@ class Router
 
         foreach ($this->routes as $key => $val) {
             foreach ($val['route'] as $k => $v) {
-                if (strtolower($val['method']) === $this->method) {
-                    $routeWithNoSlash = ltrim($k, '/');
-                    $routesArray[] = explode('/', $routeWithNoSlash);
-                }
+                $routeWithNoSlash = ltrim($k, '/');
+                $routesArray[] = explode('/', $routeWithNoSlash);
             }
         }
 
@@ -66,7 +64,11 @@ class Router
 
         $route = key($this->routes[$correctRouteKeyPosition]['route']);
         
-        return $route;
+        if (strtolower($this->method) ===  strtolower($this->routes[$correctRouteKeyPosition]['method'])) {
+            return $route;
+        }
+
+        throw new \Exception("Route " . strtoupper($this->method) . " $this->URI does not exist");
     }
 
     private function getCorrectRoute(array $currentRouteArray, array $routesArray)
