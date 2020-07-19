@@ -128,4 +128,11 @@ class Response extends GuzzleResponse
         echo static::$phrases[$statusCode];
         exit();
     }
+
+    public static function redirect(string $location, int $statusCode)
+    {
+        http_response_code($statusCode);
+        header("Location: $location");
+        exit();
+    }
 }
