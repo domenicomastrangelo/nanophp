@@ -46,11 +46,8 @@ class Router
     {
         $URIWithNoSlash = ltrim($this->URI, '/');
 
-        // Faccio un explode della stringa per il carattere /
         $currentRouteArray = explode("/", $URIWithNoSlash);
 
-        // Trasformo ogni route in un array multidimensionale
-        // con le route splittate in porzioni per il carattere /
         $routesArray = [];
 
         foreach ($this->routes as $key => $val) {
@@ -73,10 +70,6 @@ class Router
 
     private function getCorrectRoute(array $currentRouteArray, array $routesArray)
     {
-        // Confronto uno ad uno gli array delle route con
-        // l'array della URI corrente e li ordino in base
-        // a quante porzioni hanno in comune
-        
         $foundRoute = false;
         $paramPosition = 0;
 
