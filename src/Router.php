@@ -53,28 +53,25 @@ class Router
         foreach ($this->routes as $key => $val) {
             foreach ($val['route'] as $k => $v) {
                 $routeWithNoSlash = ltrim($k, '/');
-                $routesArray[] = explode('/', $routeWithNoSlash);
+                $routesArray[] = [
+                    'method' => $val['method'],
+                    'route'  => explode('/', $routeWithNoSlash)
+                ];
             }
         }
-
+        
         $correctRouteKeyPosition = $this->getCorrectRoute($currentRouteArray, $routesArray);
 
-        $route = key($this->routes[$correctRouteKeyPosition]['route']);
-        
-        if (strtolower($this->method) ===  strtolower($this->routes[$correctRouteKeyPosition]['method'])) {
-            return $route;
-        }
-
-        throw new \Exception("Route " . strtoupper($this->method) . " $this->URI does not exist");
+        return $this->routes[$correctRouteKeyPosition];
     }
 
     private function getCorrectRoute(array $currentRouteArray, array $routesArray)
     {
         $foundRoute = false;
         $paramPosition = 0;
-
+        
         foreach ($routesArray as $key => $routes) {
-            foreach ($routes as $rKey => $rVal) {
+            foreach ($routes['route'] as $rKey => $rVal) {
                 $rVal = ltrim(rtrim($rVal, '}'), '{');
                 $valueToCompare = $currentRouteArray[$rKey] ?? "";
                 
@@ -85,18 +82,24 @@ class Router
                     $foundRoute = false;
                     continue 2;
                 } elseif ($rVal === "") {
-                    if ($rVal === $valueToCompare) {
+                    if (
+                        $rVal === $valueToCompare &&
+                        strtolower($this->method) === strtolower($routes['method'])
+                    ) {
                         $foundRoute = true;
                         break;
                     }
                 } elseif ($rVal === $valueToCompare) {
                     if (isset($currentRouteArray[$rKey + 1])) {
                         continue;
-                    } else {
+                    } elseif (strtolower($this->method) === strtolower($routes['method'])) {
                         $foundRoute = true;
                         break;
                     }
-                } elseif (@preg_match("/^" . $rVal . "$/", $valueToCompare) == true) {
+                } elseif (
+                    @preg_match("/^" . $rVal . "$/", $valueToCompare) == true &&
+                    strtolower($this->method) === strtolower($routes['method'])
+                ) {
                     $paramKey = $this->routes[$key]['params'][$paramPosition];
                     $this->params[$paramKey] = $valueToCompare;
                     $paramPosition++;
@@ -117,10 +120,8 @@ class Router
 
     public function route()
     {
-        $currentRoute = "/";
-
         try {
-            $currentRoute = $this->getRoute();
+            $routeAndMethod = $this->getRoute();
         } catch (\Exception $e) {
             if ($this->di->make("config")::DEBUG_MODE) {
                 echo $e;
@@ -130,17 +131,10 @@ class Router
             }
         }
 
-        $currentRoute = ltrim($currentRoute, '/');
+        $currentRoute = ltrim(key($routeAndMethod['route']), '/');
         $currentRoute = "/" . $currentRoute;
 
-        $routes = [];
-        
-        foreach ($this->routes as $key => $val) {
-            $key = key($val['route']);
-            $routes[$key] = $val['route'][$key];
-        }
-        
-        $controllerAndFunction = $routes[$currentRoute];
+        $controllerAndFunction = $routeAndMethod['route'][$currentRoute];
 
         try {
             $controllerName = '';
