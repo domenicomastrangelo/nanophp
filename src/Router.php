@@ -90,13 +90,13 @@ class Router
                         break;
                     }
                 } elseif ($rVal === $valueToCompare) {
-                    if (isset($routes[$rKey + 1])) {
+                    if (isset($currentRouteArray[$rKey + 1])) {
                         continue;
                     } else {
                         $foundRoute = true;
                         break;
                     }
-                } elseif (@preg_match("/" . $rVal . "/", $valueToCompare) == true) {
+                } elseif (@preg_match("/^" . $rVal . "$/", $valueToCompare) == true) {
                     $paramKey = $this->routes[$key]['params'][$paramPosition];
                     $this->params[$paramKey] = $valueToCompare;
                     $paramPosition++;
@@ -112,7 +112,7 @@ class Router
             $this->params = [];
         }
 
-        throw new \Exception("Route " . strtoupper($this->method) . " $this->URI does not exist");
+        Response::abort(404);
     }
 
     public function route()
